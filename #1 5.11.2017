@@ -1,0 +1,60 @@
+/*Напишите функции min, max, avg, med, процедуру swap принимающие в себя три вещественных аргумента и программу с примером из использования.
+min - находит минимальное из трех значений, max - максимальное, avg - среднее арифметическое, med  - медианное (гуглим, что это такое).
+swap - переставляет значения по кругу ( первое во второе, второе в третье, третье в первое).*/
+
+#include <iostream>
+
+using namespace std;
+
+float min(float a, float b, float c)
+{
+    if (a < b && a < c)
+        return a;
+    else if (b < a && b < c)
+        return b;
+    else return c;
+}
+
+float max(float a, float b, float c)
+{
+    if (a > b && a > c)
+        return a;
+    else if (b > a && b > c)
+        return b;
+    else return c;
+}
+
+float avg(float a, float b, float c)
+{
+    return (a+b+c)/3;
+}
+
+float med(float a, float b, float c)
+{
+    if (a != max(a, b, c) && a != min(a, b, c))
+        return a;
+    else if (b != max(a, b, c) && b != min(a, b, c))
+        return b;
+    else return c;
+}
+void swap(float *a, float *b, float *c)
+{
+    int temp;
+    temp = *a;
+    *a = *c;
+    *c = *b;
+    *b = temp;
+}
+
+int main()
+{
+    float a, b, c;
+    cin >> a >> b >>c;
+    cout << "min: " << min(a, b, c) << endl;
+    cout << "max: " << max(a, b, c) << endl;
+    cout << "avg: " << avg(a, b, c) << endl;
+    cout << "med: " << med(a, b, c) << endl;
+    swap(&a, &b, &c);
+    cout << "swap: " << a << " " << b << " " << c;
+    return 0;
+}
