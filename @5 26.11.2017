@@ -1,0 +1,222 @@
+/*
+Напишите программу для работы с информацией о кредитах.
+Программа должна содержать структуру содержащую информацию о
+ ФИО
+ ИНН(12-значный номер)
+ Дата выдачи и срок кредита. Будем считать опаздывающих с оплатой нет.
+ Размер кредита
+ Месячная процентная ставка (2 процента - 1.02).
+ Будем считать, что долг увеличивается на этот процент в конце
+ каждого месяца(после ежемесячного платежа), с округлением до 1 рубля вверх
+ Информация о суммах платежей по месяцам. Считаем информацию корректной.
+Структура должна с помощью соответствующих методов уметь:
+  Вычислять остаток долга
+  Добавлять информацию о платеже
+  Рассчитывать ежемесячный платеж необходимый для своевременного
+  погашения кредита, при условии что суммы будут одинаковыми каждый месяц.
+  Рассчитывать сумму переплаты по процентам, в случае
+  немедленного погашения кредита
+*/
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <math.h>
+
+using namespace std;
+
+struct TCredit {
+    string name;   
+    string inn;   
+    string date;  
+    long cred;    
+    int months;   
+    float proc;   
+    long * pay;   
+    long debt;    
+    int lastpay;  
+
+    TCredit();
+    ~TCredit();
+    void startCredit(string sdate, long cr, int m, float prc ); //new credit
+    void payment(int m, int sum);
+    long getDebt(int m);
+    long getOverPay();
+    long getMonthPay();
+    void printPay();
+};
+
+TCredit::TCredit(){
+    months = 0;
+    lastpay = 0;
+}
+
+TCredit::~TCredit(){
+    if( months != 0 ) delete [] pay;
+}
+void TCredit::startCredit(string sdate, long cr, int m, float prc ){
+    if( months != 0 ) delete [] pay;
+    pay = new long [m+1];
+    for(int i = 1; i < m+1; i++) pay[i] = 0;
+    date = sdate;
+    months = m;
+    proc = prc/100.0 + 1.0;
+    cred = cr;
+    debt = cr;
+    pay[0] = debt;
+    lastpay = 0;
+}
+void TCredit::payment(int m, int sum){
+    if( m > lastpay){
+      pay[m] = sum;
+      debt = getDebt(m); 
+      lastpay = m;
+    }
+}
+    
+long TCredit::getDebt(int m){
+    double d = cred;
+    for (int i=1; i <= m; i++){
+        d = (d - (double)pay[i])*proc;
+        if( d < 0 ) d = 0;
+    }
+    long r = int(d);
+    if( d-r > 0 ) r++;
+    return r;
+}
+long TCredit::getMonthPay(){
+    double ak = pow(proc,months);
+    double x= double(cred)*ak*(proc-1);
+    x /= (ak-1);
+    x /= proc;
+    long r = int(x);
+    if( x-r > 0 ) r++;
+    return r;
+}
+     long d = 0;
+     for( int i=1; i <= lastpay; i++) d += pay[i];
+     d += debt;
+     return d-cred;
+}
+ void TCredit::printPay(){
+     if( lastpay == 0 ){
+         cout << "No any payments" << endl;
+         return;
+     } else{
+         for( int i=1; i <= lastpay; i++)
+           cout << "Month " << i << " " << pay[i] << " rub." << endl;
+     }
+}
+
+
+int main(int argc, char** argv) {
+    TCredit cred = TCredit();
+    cout << " \
+    There are the following commands:\n  \
+    ( Only English words accepted in names) \n \
+    n <name> - Enter name \n \
+    i <INN> - Enter INN\n \
+    r <01/02/2017> <sum> <number of months> <procent> - new credit\n \
+    p <m> <sum> - payment for month number m from the begining of credit\n \
+    d - Get current debt \n \
+    e - procent overpayment if repay the debt immediately \n \
+    m - calc payment by month \n \
+    s - print payments by months \n \
+    q - quit \n \
+\n";
+
+  string cmd, s, dt;
+  long sum;
+  int m;
+  float prc;
+  bool ok = true;
+  while(ok) {
+    cout << "Enter the command\n";
+    cin >> cmd;
+    switch(cmd[0]){
+      case 'q': {ok = false; break; };
+      case 'n': {   
+           getline(cin, s);
+           s.erase(0,1); 
+           cred.name = s;
+           break;
+      };
+      case 'i': { 
+           getline(cin, s);
+           s.erase(0,1);
+           cred.inn = s;
+           break;
+      }
+      case 'r': {
+           cin >> dt;
+           cin >> sum;
+           cin >> m;
+           cin >> prc;
+           cout << sum <<" " << m << " " << prc << endl;
+           cred.startCredit(dt, sum,m, prc);
+           cout << cred.cred <<" " << cred.months << " " << cred.proc << endl;
+           cout << "Current debt=" << cred.debt << endl;
+           break;
+      }
+      case 'p': {
+           cin >> m;
+           cin >> sum;
+           cout << sum <<" " << m << endl;
+           if( cred.months == 0 ){
+               cout << " No credit" << endl;
+               break;
+           }
+           if( m > cred.lastpay ){
+               cred.payment(m, sum);
+               cout << "Current debt=" << cred.debt << endl;
+           } else {
+               cout << "Month must be > " << cred.lastpay << endl;
+           }
+           break;
+      }
+      case 'd': {
+           if( cred.months == 0 ){
+               cout << " No credit" << endl;
+               break;
+           }
+
+           cout << cred.getDebt(cred.lastpay) << endl;
+           break;
+      }
+      case 'm': {
+           if( cred.months == 0 ){
+               cout << " No credit" << endl;
+               break;
+           }
+          long x = cred.getMonthPay();
+          cout << "Pay " << x << " rub each month" << endl;
+          cout << "Overpayment=" << x*cred.months-cred.cred << endl;
+          break;
+      }
+      case 'e': {
+           if( cred.months == 0 ){
+               cout << " No credit" << endl;
+               break;
+           }
+           cout << "Overpayment=" << cred.getOverPay() << endl;
+           break;
+      }
+      case 's': {
+           if( cred.months == 0 ){
+               cout << " No credit" << endl;
+               break;
+           }
+           cred.printPay();
+           break;
+      }
+      default: {
+          cin.ignore();
+          cin.sync();
+          getline(cin, s);
+          cout << "Invalid command " << cmd << endl; break;
+      };
+    }
+  }
+
+    system("pause");
+    return 0;
+}
