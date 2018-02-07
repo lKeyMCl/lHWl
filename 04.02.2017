@@ -1,0 +1,148 @@
+#include <iostream>
+#include <math.h>
+using namespace std;
+
+struct Complex {
+double r; //любые 2 действительных числа
+double i;
+
+Complex() {};
+
+Complex(double x) {
+    r = x;
+    i = 0;
+}
+
+Complex(double x, double y) {
+    r = x;
+    i = y;
+}
+
+Complex (Complex &A){//копирование
+    r=A.r;
+    i=A.i;
+}
+
+
+ Complex & operator += (const Complex &A){ // сложение
+ r = r + A.r;
+ i = i + A.i;
+ return *this;
+ }
+
+ Complex & operator *= (Complex &A){ // умножение
+ r = r * A.i - i * A.r;
+ i = i * A.r + r * A.i;
+ return *this;
+ }
+
+  Complex & operator -= (Complex &A){ // сложение
+ r  = r - A.r;
+ i = i -  A.i;
+ return *this;
+ }
+
+  Complex & operator /= (Complex &A){ // дедение
+ r = (r * A.i + i * A.r)/ (A.i * A.i + A.r * A.r);
+ i = (i * A.r - r * A.i)/ (A.i * A.i + A.r * A.r);
+ return *this;
+ }
+
+ ~ Complex () {}
+
+};
+
+Complex conj (Complex A){
+A.r=A.r;
+A.i*=(-1);
+return A;
+}
+
+double ABC (Complex A){
+return double (sqrt(A.r*A.r + A.i*A.i));
+}
+
+
+ Complex  operator+ (Complex &A, Complex &B){
+ return (A+=B);
+ }
+
+ Complex  operator* (Complex &A, Complex &B){
+ return (A*=B);
+}
+
+ Complex  operator/ (Complex &A, Complex &B){
+ return (A/=B);
+}
+
+ Complex  operator- (Complex &A, Complex &B){
+ return (A-=B);
+}
+
+bool operator == (Complex &A, Complex &B) {
+return ((A.r==B.r)&&(A.i==B.i));
+}
+
+bool operator != (Complex &A, Complex &B) {
+return !(A==B);
+}
+
+
+int main(){
+Complex c, l;
+cout << " Enter C number : ";
+cin >> c.r;
+cout << " ";
+cin >> c.i;
+Complex s(c); // копирование
+cout  << endl << " S-Copy of C: " << s.r <<" "<< s.i<< endl;
+
+Complex p = c; //присваивание
+cout  <<" The P-number equal to C: " << p.r << " " << p.i << endl;
+
+cout << " Enter L number : ";
+cin >> l.r >> l.i;
+
+cout << " Operation with P and S: "<< endl;
+
+p += s; // сложение
+cout << endl<<   " += "  << p.r << " " << p.i<<endl;
+
+p -= s; // вычитание
+cout  << " -= "  << p.r << " " << p.i <<endl ;
+
+p *= s; // умножение
+cout  << " *= "<< p.r << " " << p.i<<endl;
+
+ p /= s; // дедение
+cout  << " /= "  << l.r << " " << l.i << endl;
+
+Complex m;
+m = c + l;
+cout << " m = c + l =  " << m.r << " " << m.i << endl ;
+
+m = c - l;
+cout << " m = c - l =  " << m.r << " " << m.i << endl ;
+
+m = c * l;
+cout << " m = c * l =  " << m.r << " " << m.i << endl ;
+
+
+m = c / l;
+cout << " m = c / l =  " << m.r << " " << m.i << endl ;
+
+cout << " l = c? ";
+
+if (l == c) cout << " true ";
+if (l != c) cout << " false ";
+ c.r=5; c.i=9;
+cout << endl << " C= "<< c.r << " " << c.i ;
+ l = conj (c);
+ cout << endl << " The number conjugate to C= " << l.r << " " << l.i << endl ;
+
+ double a = ABC (c);
+
+
+ cout  << " Module of C number= "<< a << endl ;
+ return 0;
+}
