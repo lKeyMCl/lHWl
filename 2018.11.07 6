@@ -80,4 +80,3 @@ int main(int argc, char** argv){
     EulerWay(g, V, used);
     return 0;
 }
-.
