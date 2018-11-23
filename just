@@ -2,13 +2,10 @@ struct node{
 	double data;
 	node *next;
 };
-
 struct stack{
  	node *head;
-	int priority;
-  
+	int priority; 
 stack(){head=NULL; priority=0;}
-
 void push(double h){
      node *q;
      q= new node();
@@ -29,8 +26,7 @@ void push(double h){
 	while(q->pr>p->next->priority)
 	{p=p->next;}
 	q->next=p->next;
-	p=q; }}
- 
+	p=q; }} 
 double pop(){
     double i=head->data;
     if(head==NULL){
@@ -46,7 +42,6 @@ double pop(){
     }
     return i;
 }
-
 ~stack(){
     node *p=head;
     while(head!=NULL){  
