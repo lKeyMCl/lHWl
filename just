@@ -5,8 +5,9 @@ struct node{
 
 struct stack{
  	node *head;
+	int priority;
   
-stack(){head=NULL; size=0;}
+stack(){head=NULL; priority=0;}
 
 void push(double h){
      node *q;
@@ -16,10 +17,19 @@ void push(double h){
          head=q;
      }
      else{
-         q->next=head;
+     	if(q->priority<=head->priority
+        {q->next=head;
          head=q;
      }
  }
+ }
+ 	node*p;
+	p=head;
+	else{
+	while(q->pr>p->next->priority)
+	{p=p->next;}
+	q->next=p->next;
+	p=q; }}
  
 double pop(){
     double i=head->data;
