@@ -45,5 +45,4 @@ double pop(){
     head=p;
 }
 }
-
 };
