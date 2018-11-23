@@ -1,6 +1,7 @@
 struct node{
 	double data;
-	node *next;};
+	node *next;
+};
 struct stack{
  	node *head;
 	int priority; 
@@ -10,12 +11,15 @@ void push(double h){
      q= new node();
      q->data=h;
      if(head==NULL){
-         head=q;}
+         head=q;
+     }
      else{
      	if(q->priority<=head->priority
         {q->next=head;
          head=q;
-     } } }
+     }
+ }
+ }
  	node*p;
 	p=head;
 	else{
@@ -27,17 +31,22 @@ double pop(){
     double i=head->data;
     if(head==NULL){
         cout<<"stack empty"<<endl;
-        return 0;}
+        return 0;
+    }
     else{
         node *k;
         k=head->next;
         delete head;
-        head=k;}
-    return i;}
+        head=k;
+    }
+    return i;
+}
 ~stack(){
     node *p=head;
     while(head!=NULL){  
     p=head->next ;
     delete head;
     head=p;
-}}};
+}
+}
+};
