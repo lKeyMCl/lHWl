@@ -1,11 +1,11 @@
 struct node{
 	double data;
 	node *next;
+	int priority;
 };
 struct stack{
- 	node *head;
-	int priority; 
-stack(){head=NULL; priority=0;}
+ 	node *head;	
+stack(){head=NULL; priority=0; data=0;}
 void push(double h){
      node *q;
      q= new node();
@@ -19,11 +19,10 @@ void push(double h){
          head=q;
      }
  }
- }
  	node*p;
 	p=head;
 	else{
-	while(q->pr>p->next->priority)
+	while(q->priority>p->next->priority)
 	{p=p->next;}
 	q->next=p->next;
 	p=q; }} 
